@@ -41,6 +41,7 @@
   @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 
   .screen#screen-intro{background-image:url('cards/intro-bg.png')}
+  .screen#screen-category{background-image:url('cards/category-bg.png')}
   .screen#screen-pick{background-image:url('cards/pick-bg.png')}
   .screen#screen-result{background-image:url('cards/result-bg.png')}
 
@@ -53,6 +54,13 @@
 
   /* Intro: '카드 선택하기' */
   .hit-start{top:88.5%;left:24%;width:52%;height:6%;z-index:25;border-radius:30px}
+
+  /* Category: 3 drawn buttons in category-bg.png */
+  .hit-cat{position:absolute;left:18%;width:64%;height:8.5%;z-index:25;border-radius:50px;transition:transform .2s, filter .2s}
+  .hit-cat:hover{transform:scale(1.02);filter:drop-shadow(0 0 14px rgba(232,197,116,.45))}
+  .hit-cat[data-cat="love"]  {top:28.5%}
+  .hit-cat[data-cat="money"] {top:42.5%}
+  .hit-cat[data-cat="health"]{top:56.5%}
 
   /* === Pick: 9 card click zones over drawn cards === */
   /* Measured: y 22.7%–36.5%, x 2.1%–97.9% */
@@ -176,20 +184,16 @@
   .r-num{text-align:center;font-family:'Cormorant Garamond','Times New Roman',serif;font-size:30px;color:var(--ink);font-weight:500;letter-spacing:.15em;line-height:1}
   .r-name{text-align:center;margin-top:4px;font-size:17px;font-weight:600;color:var(--ink-deep);letter-spacing:.04em}
   .r-name-en{text-align:center;font-family:'Cormorant Garamond',serif;font-size:11px;color:var(--ink-mid);letter-spacing:.22em;margin-top:2px}
-  .r-divider{display:flex;align-items:center;justify-content:center;margin:10px 0 8px;color:#8a6420}
+  .r-divider{display:flex;align-items:center;justify-content:center;margin:12px 0 10px;color:#8a6420}
   .r-divider::before,.r-divider::after{content:"";flex:0 1 50px;height:1px;background:#8a6420;opacity:.55}
-  .r-divider span{margin:0 10px;font-size:11px;letter-spacing:.3em}
-  .r-keyword{text-align:center;font-size:12.5px;color:#5a3a10;letter-spacing:.14em;margin-bottom:6px}
-  .r-headline{text-align:center;font-size:15.5px;line-height:1.55;font-weight:500;color:var(--ink-deep);letter-spacing:.02em;margin:4px 2px 12px}
+  .r-divider span{margin:0 12px;font-size:12px;letter-spacing:.3em;color:var(--ink-mid);font-weight:600}
+  .r-keyword{text-align:center;font-size:12.5px;color:#5a3a10;letter-spacing:.1em;margin-top:4px}
+  .r-keyword strong{color:var(--ink-mid);font-weight:700}
+  .r-headline{text-align:center;font-size:15.5px;line-height:1.55;font-weight:500;color:var(--ink-deep);letter-spacing:.02em;margin:6px 2px 14px}
   .r-headline em{font-style:normal;color:var(--ink-mid);font-weight:700}
-  .r-section{margin:10px 2px 2px}
-  .r-section h4{
-    font-size:11.5px;color:var(--ink-mid);font-weight:700;letter-spacing:.28em;
-    display:flex;align-items:center;gap:8px;
-  }
-  .r-section h4::before{content:"";flex:0 0 8px;height:1px;background:#a07a30;opacity:.5}
-  .r-section h4::after{content:"";flex:1;height:1px;background:#a07a30;opacity:.5}
-  .r-section p{font-size:13px;line-height:1.7;color:var(--ink);margin-top:5px;text-align:left}
+  .r-headline strong{color:var(--ink-mid);font-weight:700}
+  .r-body{font-size:14px;line-height:1.85;color:var(--ink);text-align:center;margin:2px 4px 10px;letter-spacing:.01em}
+  .r-body p{margin:8px 0}
 
   /* === CTA bar at bottom (covers drawn '결과 확인하기' on result-bg) === */
   .cta-bar{
@@ -245,7 +249,20 @@
     </button>
   </div>
 
-  <!-- ========== Screen 2: Pick ========== -->
+  <!-- ========== Screen 2: Category ========== -->
+  <div class="screen" id="screen-category">
+    <button class="hit hit-back" data-back aria-label="back"></button>
+    <button class="hit hit-home" data-home aria-label="home"></button>
+    <button class="hit hit-cat" data-cat="love"   aria-label="연애운"></button>
+    <button class="hit hit-cat" data-cat="money"  aria-label="금전운"></button>
+    <button class="hit hit-cat" data-cat="health" aria-label="건강운"></button>
+
+    <button class="audio-toggle" aria-label="bgm">
+      <svg viewBox="0 0 24 24"><path d="M3 10v4h4l5 4V6L7 10H3z"/><path d="M16 8c1.5 1.2 1.5 6.8 0 8" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+
+  <!-- ========== Screen 3: Pick ========== -->
   <div class="screen" id="screen-pick">
     <button class="hit hit-back" data-back aria-label="back"></button>
     <button class="hit hit-home" data-home aria-label="home"></button>
@@ -269,7 +286,7 @@
     </button>
   </div>
 
-  <!-- ========== Screen 3: Result ========== -->
+  <!-- ========== Screen 4: Result ========== -->
   <div class="screen" id="screen-result">
     <button class="hit hit-back" data-back aria-label="back"></button>
     <button class="hit hit-home" data-home aria-label="home"></button>
@@ -279,15 +296,11 @@
         <div class="r-num" id="rNum">0</div>
         <div class="r-name" id="rName"></div>
         <div class="r-name-en" id="rNameEn"></div>
+        <div class="r-divider"><span id="rCatLabel">✦</span></div>
+        <div class="r-headline" id="rHeadline"></div>
+        <div class="r-body" id="rBody"></div>
         <div class="r-divider"><span>✦</span></div>
         <div class="r-keyword" id="rKeyword"></div>
-        <div class="r-headline" id="rHeadline"></div>
-
-        <div class="r-section"><h4>오늘의 핵심 운</h4><p id="rCore"></p></div>
-        <div class="r-section"><h4>연애운</h4><p id="rLove"></p></div>
-        <div class="r-section"><h4>금전운</h4><p id="rMoney"></p></div>
-        <div class="r-section"><h4>일 · 사업운</h4><p id="rWork"></p></div>
-        <div class="r-section"><h4>조심할 점</h4><p id="rCaution"></p></div>
       </div>
     </div>
 
@@ -308,10 +321,14 @@
 /* ============ State ============ */
 const drawnHistory = new Set();
 let currentCard = null;
+let selectedCategory = 'love';  // 'love' | 'money' | 'health'
 let pickInProgress = false;
+
+const CATEGORY_LABEL = { love:'연애운', money:'금전운', health:'건강운' };
 
 const screens = {
   intro: document.getElementById('screen-intro'),
+  category: document.getElementById('screen-category'),
   pick: document.getElementById('screen-pick'),
   result: document.getElementById('screen-result'),
 };
@@ -404,8 +421,15 @@ function pickCard(el){
 
 document.getElementById('btnStart').addEventListener('click',()=>{
   bgmStart();
-  buildDeck();
-  show('pick');
+  show('category');
+});
+
+document.querySelectorAll('.hit-cat').forEach(b=>{
+  b.addEventListener('click',()=>{
+    selectedCategory = b.dataset.cat;
+    buildDeck();
+    show('pick');
+  });
 });
 
 document.getElementById('btnReveal').addEventListener('click',()=>{
@@ -417,22 +441,46 @@ document.getElementById('btnReveal').addEventListener('click',()=>{
 
 document.getElementById('btnAgain').addEventListener('click',()=>{
   history = ['intro'];
-  buildDeck();
-  show('pick');
+  show('category');
 });
 
 /* ============ Result render ============ */
+function getCategoryText(card, cat){
+  if(cat==='love')   return card.love;
+  if(cat==='money')  return card.money;
+  if(cat==='health') return (typeof HEALTH!=='undefined' && HEALTH[card.id]) ? HEALTH[card.id] : card.work;
+  return card.love;
+}
+function buildCategoryHeadline(card, cat){
+  // 카드의 기존 헤드라인은 "오늘은 연애에서..." 형태로 연애 위주
+  // 카테고리에 맞게 자연스럽게 변환: "오늘은 [카테고리]에서 '...날'입니다."
+  const label = CATEGORY_LABEL[cat] || '운';
+  const m = card.headline.match(/"<em>([^<]+)<\/em>"/);
+  if(m){
+    return '오늘은 <strong>'+label+'</strong>에서 "<em>'+m[1]+'</em>" 흐름입니다.';
+  }
+  return card.headline;
+}
 function renderResult(card){
   document.getElementById('rNum').textContent = card.num;
   document.getElementById('rName').textContent = card.name;
   document.getElementById('rNameEn').textContent = card.nameEn;
-  document.getElementById('rKeyword').textContent = card.keyword;
-  document.getElementById('rHeadline').innerHTML = card.headline;
-  document.getElementById('rCore').textContent = card.core;
-  document.getElementById('rLove').textContent = card.love;
-  document.getElementById('rMoney').textContent = card.money;
-  document.getElementById('rWork').textContent = card.work;
-  document.getElementById('rCaution').textContent = card.caution;
+  document.getElementById('rCatLabel').textContent = CATEGORY_LABEL[selectedCategory] || '운';
+  document.getElementById('rHeadline').innerHTML = buildCategoryHeadline(card, selectedCategory);
+
+  // body: 선택된 카테고리의 운세 본문
+  const body = document.getElementById('rBody');
+  body.innerHTML='';
+  const text = getCategoryText(card, selectedCategory) || '';
+  text.split(/\n\n+/).forEach(par=>{
+    if(!par.trim()) return;
+    const p = document.createElement('p');
+    p.innerHTML = par.replace(/\n/g,'<br>');
+    body.appendChild(p);
+  });
+
+  document.getElementById('rKeyword').innerHTML = '키워드 — <strong>'+card.keyword+'</strong>';
+
   const pc = document.querySelector('.parchment-content');
   if(pc) pc.scrollTop = 0;
 }
