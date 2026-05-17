@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0a1232">
+<title>난다의 한 장 행운 | 난다사주</title>
+<style>
+  :root{
+    --bg-deep:#070a23;
+    --bg-mid:#0e1742;
+    --bg-soft:#1a2362;
+    --gold:#e8c574;
+    --gold-soft:#d6b56a;
+    --gold-glow:rgba(232,197,116,.65);
+    --ivory:#f4ead0;
+    --text:#e9eaff;
+    --text-dim:#b9b7d6;
+    --line:rgba(232,197,116,.45);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%;overflow:hidden;background:#000;color:var(--text);font-family:'Noto Serif KR','Nanum Myeongjo',serif;font-weight:400;letter-spacing:.02em;user-select:none}
+  body{display:flex;align-items:center;justify-content:center}
+
+  .stage{
+    position:relative;width:100%;height:100%;max-width:540px;max-height:960px;
+    overflow:hidden;
+    background:
+      radial-gradient(ellipse at 20% 0%, #2a2e7a 0%, transparent 55%),
+      radial-gradient(ellipse at 80% 10%, #4b3a8e 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 100%, #0a1240 0%, #050818 70%),
+      linear-gradient(180deg,#0a1238 0%, #050820 100%);
+  }
+  @media (min-aspect-ratio: 9/16){
+    .stage{width:auto;aspect-ratio:9/16;height:100%}
+  }
+
+  /* === Background layers === */
+  .sky-stars{position:absolute;inset:0;pointer-events:none}
+  .star{position:absolute;background:#fff;border-radius:50%;opacity:0;animation:twinkle 4s infinite ease-in-out}
+  .star.big{box-shadow:0 0 8px #fff,0 0 16px #cdd}
+  @keyframes twinkle{
+    0%,100%{opacity:.15;transform:scale(.6)}
+    50%{opacity:.95;transform:scale(1)}
+  }
+  .moon{
+    position:absolute;top:6%;right:6%;width:90px;height:90px;border-radius:50%;
+    background:radial-gradient(circle at 35% 35%, #fff8dc 0%, #f0d894 35%, #b59550 70%, transparent 71%);
+    box-shadow:0 0 40px rgba(255,225,160,.55), 0 0 80px rgba(255,225,160,.25);
+    filter:drop-shadow(0 0 20px rgba(255,220,150,.5));
+  }
+  .moon::before{
+    content:"";position:absolute;inset:6%;border-radius:50%;
+    background:radial-gradient(circle at 65% 40%, transparent 55%, #050820 56%);
+  }
+  .mountains{
+    position:absolute;left:0;right:0;bottom:0;height:38%;pointer-events:none;
+    background:linear-gradient(180deg, transparent 0%, transparent 35%, rgba(8,12,40,.4) 60%, #060920 100%);
+  }
+  .mountains svg{position:absolute;left:0;right:0;bottom:0;width:100%;height:100%}
+  .forest-l,.forest-r{position:absolute;bottom:0;width:35%;height:32%;pointer-events:none;opacity:.85}
+  .forest-l{left:0}
+  .forest-r{right:0;transform:scaleX(-1)}
+  .crystal{position:absolute;right:4%;bottom:6%;width:90px;height:130px;pointer-events:none;opacity:.85;filter:drop-shadow(0 0 14px rgba(180,200,255,.6))}
+
+  /* === Floating particles === */
+  .particles{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:6}
+  .p-dot{position:absolute;width:3px;height:3px;border-radius:50%;background:radial-gradient(circle,#fff7d6 0%, rgba(255,220,150,.5) 50%, transparent 70%);opacity:0}
+
+  /* === Common UI === */
+  .nav{position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-between;padding:18px 22px;z-index:30}
+  .nav button{background:none;border:0;color:var(--ivory);cursor:pointer;padding:6px;opacity:.92;transition:transform .2s}
+  .nav button:hover{transform:scale(1.1);opacity:1}
+  .nav svg{width:26px;height:26px;stroke:var(--ivory);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+
+  .audio-toggle{
+    position:absolute;bottom:18px;right:18px;z-index:40;
+    width:42px;height:42px;border-radius:50%;
+    background:rgba(15,20,55,.6);border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;cursor:pointer;
+    backdrop-filter:blur(6px);
+  }
+  .audio-toggle svg{width:18px;height:18px;stroke:var(--ivory);fill:none;stroke-width:1.8}
+
+  .screen{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;padding:60px 28px 80px;z-index:10}
+  .screen.active{display:flex;animation:fadeIn .7s ease}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  /* === Screen 1: Intro === */
+  .ring{
+    position:absolute;top:50%;left:50%;width:75%;aspect-ratio:1;border-radius:50%;
+    border:1px solid rgba(232,197,116,.25);
+    transform:translate(-50%,-58%);
+    box-shadow:inset 0 0 30px rgba(232,197,116,.08);
+  }
+  .ring::after{
+    content:"";position:absolute;inset:-14px;border-radius:50%;
+    border:1px dashed rgba(232,197,116,.15);
+  }
+  .title-1{
+    font-family:'Noto Serif KR',serif;font-weight:300;font-size:42px;line-height:1.35;
+    color:#fdf6dd;text-align:center;letter-spacing:.08em;
+    text-shadow:0 0 18px rgba(255,235,180,.55), 0 0 38px rgba(255,210,140,.3);
+    margin-top:-40px;
+  }
+  .butterfly{
+    margin:36px auto 6px;width:160px;height:120px;position:relative;
+    filter:drop-shadow(0 0 12px rgba(180,160,255,.55));
+    animation:hover 5s ease-in-out infinite;
+  }
+  @keyframes hover{
+    0%,100%{transform:translateY(0) rotate(-2deg)}
+    50%{transform:translateY(-10px) rotate(2deg)}
+  }
+  .subtitle{margin-top:12px;text-align:center}
+  .subtitle .tarot{font-family:'Cormorant Garamond','Times New Roman',serif;font-size:18px;color:#e8c574;letter-spacing:.32em;display:block}
+  .subtitle .nanda{font-family:'Cormorant Garamond',serif;font-size:34px;color:#e8c574;letter-spacing:.18em;font-weight:500;text-shadow:0 0 14px rgba(232,197,116,.55)}
+  .intro-sub{
+    position:absolute;bottom:18%;left:0;right:0;text-align:center;
+    font-size:13px;color:var(--text-dim);letter-spacing:.18em;opacity:.7;
+  }
+
+  .btn-primary{
+    position:absolute;bottom:8%;left:50%;transform:translateX(-50%);
+    padding:14px 38px;background:rgba(12,18,55,.55);
+    border:1px solid var(--line);border-radius:40px;
+    color:var(--ivory);font-family:'Noto Serif KR',serif;font-size:17px;letter-spacing:.18em;
+    cursor:pointer;backdrop-filter:blur(6px);
+    box-shadow:0 0 18px rgba(232,197,116,.18), inset 0 0 12px rgba(232,197,116,.08);
+    transition:all .25s;
+    white-space:nowrap;
+  }
+  .btn-primary:hover{box-shadow:0 0 28px rgba(232,197,116,.4), inset 0 0 16px rgba(232,197,116,.14);transform:translateX(-50%) translateY(-2px)}
+  .btn-primary .arrow{margin-left:10px;color:var(--gold)}
+
+  /* === Screen 2: Card Pick === */
+  .pick-head{text-align:center;margin-top:-30px}
+  .pick-head .ornament{display:block;color:var(--gold);font-size:14px;letter-spacing:.4em;margin-bottom:10px;opacity:.85}
+  .pick-head h2{font-weight:300;font-size:28px;letter-spacing:.18em;color:#f5ecd2;text-shadow:0 0 10px rgba(255,220,160,.4)}
+  .pick-head .sub{margin-top:8px;font-size:12.5px;letter-spacing:.18em;color:var(--text-dim);opacity:.8}
+  .pick-head .divider{display:block;margin:14px auto 0;width:60%;height:1px;background:linear-gradient(90deg,transparent,var(--line),transparent)}
+
+  .deck{
+    margin-top:26px;display:flex;justify-content:center;gap:6px;width:100%;
+    padding:0 6px;perspective:1200px;
+  }
+  .deck-card{
+    flex:1;max-width:44px;aspect-ratio:5/8;
+    background:
+      radial-gradient(ellipse at 50% 50%, rgba(232,197,116,.18) 0%, transparent 60%),
+      linear-gradient(135deg,#0c1245 0%, #1a2065 50%, #0c1245 100%);
+    border:1px solid rgba(232,197,116,.55);border-radius:4px;
+    cursor:pointer;position:relative;
+    transition:transform .35s cubic-bezier(.2,.7,.3,1), box-shadow .35s, opacity .35s;
+    box-shadow:0 0 8px rgba(232,197,116,.25), inset 0 0 8px rgba(140,120,255,.18);
+    transform:translateY(var(--shuffle-y,0)) rotate(var(--shuffle-r,0deg));
+  }
+  .deck-card::before{
+    content:"";position:absolute;inset:3px;border-radius:2px;border:1px solid rgba(232,197,116,.3);
+  }
+  .deck-card::after{
+    content:"";position:absolute;left:50%;top:50%;width:55%;height:55%;transform:translate(-50%,-50%);
+    background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M17 12c-3 0-5-2-5-5 0 5-2 7-5 7 3 0 5 2 5 5 0-3 2-7 5-7z' fill='%23e8c574' opacity='.7'/></svg>") center/contain no-repeat;
+  }
+  .deck-card:hover:not(.picked):not(.disabled){transform:translateY(calc(var(--shuffle-y,0px) - 8px));box-shadow:0 6px 18px rgba(232,197,116,.5), inset 0 0 8px rgba(140,120,255,.3)}
+  .deck-card.disabled{opacity:.3;cursor:default;pointer-events:none}
+  .deck-card.picked{opacity:.0;cursor:default;pointer-events:none}
+
+  .picked-slot{
+    margin:28px auto 0;width:48%;max-width:200px;aspect-ratio:5/8;position:relative;
+    display:flex;align-items:center;justify-content:center;perspective:1400px;
+  }
+  .picked-slot .picked-glow{
+    position:absolute;inset:-22px;border-radius:50%;
+    background:radial-gradient(circle, rgba(232,197,116,.32) 0%, transparent 65%);
+    animation:pulse 3s ease-in-out infinite;
+    opacity:0;transition:opacity .6s;
+  }
+  .picked-slot.has-pick .picked-glow{opacity:1}
+  @keyframes pulse{
+    0%,100%{opacity:.5;transform:scale(.95)}
+    50%{opacity:1;transform:scale(1.05)}
+  }
+  .flipper{
+    width:100%;height:100%;position:relative;transform-style:preserve-3d;
+    transition:transform 1s cubic-bezier(.6,.05,.3,1);
+  }
+  .flipper.flipped{transform:rotateY(180deg)}
+  .face{
+    position:absolute;inset:0;backface-visibility:hidden;border-radius:8px;overflow:hidden;
+  }
+  .face.back{
+    background:
+      radial-gradient(ellipse at 50% 50%, rgba(232,197,116,.22) 0%, transparent 65%),
+      linear-gradient(135deg,#0c1245 0%, #1a2065 50%, #0c1245 100%);
+    border:1.5px solid var(--gold);
+    box-shadow:0 0 28px rgba(232,197,116,.55), inset 0 0 18px rgba(232,197,116,.15);
+  }
+  .face.back::before{
+    content:"";position:absolute;inset:6px;border:1px solid rgba(232,197,116,.55);border-radius:5px;
+  }
+  .face.back::after{
+    content:"";position:absolute;left:50%;top:50%;width:55%;height:55%;transform:translate(-50%,-50%);
+    background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M17 12c-3 0-5-2-5-5 0 5-2 7-5 7 3 0 5 2 5 5 0-3 2-7 5-7z' fill='%23e8c574'/></svg>") center/contain no-repeat;
+    filter:drop-shadow(0 0 8px rgba(232,197,116,.7));
+  }
+  .face.front{
+    transform:rotateY(180deg);
+    background:linear-gradient(180deg,#f0e2bd 0%, #ddc995 60%, #c9b27a 100%);
+    border:1.5px solid #b9924c;
+    display:flex;flex-direction:column;align-items:center;justify-content:space-between;
+    padding:14px 10px;color:#3a2810;
+    box-shadow:0 0 28px rgba(232,197,116,.55);
+  }
+  .face.front .num{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:500;letter-spacing:.08em}
+  .face.front .nm{font-size:13px;text-align:center;line-height:1.3;font-weight:600;color:#2d1f08;padding:0 4px}
+  .face.front .nm-en{font-family:'Cormorant Garamond',serif;font-size:9.5px;color:#7a4a14;letter-spacing:.18em;margin-top:2px;text-align:center}
+  .face.front svg{width:55%;height:auto;opacity:.7}
+  .face.front .corn{position:absolute;width:14px;height:14px;border:1px solid #b9924c;opacity:.6}
+  .face.front .corn.tl{top:4px;left:4px;border-right:0;border-bottom:0}
+  .face.front .corn.tr{top:4px;right:4px;border-left:0;border-bottom:0}
+  .face.front .corn.bl{bottom:4px;left:4px;border-right:0;border-top:0}
+  .face.front .corn.br{bottom:4px;right:4px;border-left:0;border-top:0}
+
+  .picked-slot.empty .flipper{opacity:.18}
+  .picked-slot.empty .picked-glow{opacity:0}
+
+  .btn-reveal{
+    position:absolute;bottom:6%;left:50%;transform:translateX(-50%);
+    padding:14px 50px;background:rgba(12,18,55,.7);
+    border:1px solid var(--line);border-radius:6px;
+    color:var(--ivory);font-family:'Noto Serif KR',serif;font-size:17px;letter-spacing:.22em;
+    cursor:pointer;backdrop-filter:blur(6px);
+    box-shadow:0 0 18px rgba(232,197,116,.18), inset 0 0 12px rgba(232,197,116,.08);
+    opacity:.4;pointer-events:none;transition:all .35s;
+    white-space:nowrap;
+  }
+  .btn-reveal.ready{opacity:1;pointer-events:auto;box-shadow:0 0 24px rgba(232,197,116,.4), inset 0 0 14px rgba(232,197,116,.14)}
+  .btn-reveal.ready:hover{transform:translateX(-50%) translateY(-2px)}
+
+  /* === Screen 3: Result === */
+  #screen-result{padding:48px 18px 110px;justify-content:flex-start;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  #screen-result::-webkit-scrollbar{display:none}
+  .result-card{
+    width:100%;max-width:380px;margin:18px auto 16px;position:relative;
+    background:linear-gradient(180deg,#f1e3bd 0%, #ddc995 60%, #c9b27a 100%);
+    border:2px solid #b9924c;border-radius:6px;
+    padding:24px 22px 22px;
+    box-shadow:0 0 38px rgba(232,197,116,.4), 0 8px 28px rgba(0,0,0,.45);
+    color:#3a2810;font-family:'Noto Serif KR',serif;
+    animation:cardReveal 1s ease;
+  }
+  @keyframes cardReveal{
+    0%{opacity:0;transform:rotateY(90deg) scale(.6)}
+    100%{opacity:1;transform:none}
+  }
+  .result-card::before{
+    content:"";position:absolute;inset:6px;border:1px solid rgba(120,85,40,.45);border-radius:3px;pointer-events:none;
+  }
+  .r-num{text-align:center;font-family:'Cormorant Garamond',serif;font-size:30px;color:#3a2810;font-weight:500;letter-spacing:.15em;line-height:1}
+  .r-name{text-align:center;margin-top:6px;font-size:19px;font-weight:600;color:#2a1c08;letter-spacing:.04em}
+  .r-name-en{text-align:center;font-family:'Cormorant Garamond',serif;font-size:12px;color:#7a4a14;letter-spacing:.22em;margin-top:2px}
+  .r-illust{margin:10px auto 6px;width:62px;height:62px;display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 0 6px rgba(184,131,52,.35))}
+  .r-illust svg{width:100%;height:100%}
+  .r-divider{display:flex;align-items:center;justify-content:center;margin:8px 0 10px;color:#8a6420}
+  .r-divider::before,.r-divider::after{content:"";flex:0 1 56px;height:1px;background:#8a6420;opacity:.6}
+  .r-divider span{margin:0 10px;font-size:12px;letter-spacing:.3em}
+  .r-keyword{text-align:center;font-size:13px;color:#5a3a10;letter-spacing:.12em;margin-bottom:6px}
+  .r-headline{text-align:center;font-size:16.5px;line-height:1.55;font-weight:500;color:#2d1f08;letter-spacing:.02em;margin:4px 4px 14px}
+  .r-headline em{font-style:normal;color:#7a4a14;font-weight:700}
+  .r-section{margin:10px 2px 2px}
+  .r-section h4{
+    font-size:12px;color:#7a4a14;font-weight:700;letter-spacing:.28em;
+    display:flex;align-items:center;gap:8px;
+  }
+  .r-section h4::before,.r-section h4::after{
+    content:"";flex:0 0 10px;height:1px;background:#a07a30;opacity:.5;
+  }
+  .r-section h4::after{flex:1}
+  .r-section p{font-size:13.5px;line-height:1.7;color:#3a2810;margin-top:5px;text-align:left}
+
+  /* CTA */
+  .cta-wrap{width:100%;max-width:380px;margin:0 auto;text-align:center}
+  .cta-line{
+    margin:18px 0 10px;font-size:13.5px;color:var(--text-dim);letter-spacing:.06em;line-height:1.55;
+  }
+  .cta-line strong{color:#fdf6dd;font-weight:500}
+  .btn-cta{
+    display:inline-block;padding:13px 28px;margin:4px 4px;
+    background:linear-gradient(135deg,rgba(232,197,116,.18),rgba(110,90,200,.14));
+    border:1px solid var(--line);border-radius:30px;
+    color:var(--ivory);font-family:'Noto Serif KR',serif;font-size:14.5px;letter-spacing:.12em;
+    cursor:pointer;backdrop-filter:blur(6px);text-decoration:none;
+    box-shadow:0 0 16px rgba(232,197,116,.22), inset 0 0 10px rgba(232,197,116,.1);
+    transition:all .25s;
+  }
+  .btn-cta:hover{transform:translateY(-2px);box-shadow:0 0 26px rgba(232,197,116,.45)}
+  .btn-cta.muted{background:rgba(15,20,55,.5);font-size:13.5px;letter-spacing:.14em}
+  .btn-redraw{
+    display:block;margin:16px auto 0;padding:11px 36px;
+    background:transparent;border:1px solid rgba(232,197,116,.3);
+    color:var(--text-dim);font-family:'Noto Serif KR',serif;font-size:13px;letter-spacing:.22em;
+    border-radius:6px;cursor:pointer;
+  }
+  .btn-redraw:hover{color:var(--ivory);border-color:var(--line)}
+
+  /* Floating butterfly */
+  .float-butterfly{
+    position:absolute;left:8%;bottom:18%;width:80px;height:62px;pointer-events:none;
+    filter:drop-shadow(0 0 10px rgba(180,160,255,.5));
+    animation:butterflyFly 9s ease-in-out infinite;
+    opacity:.7;z-index:5;
+  }
+  @keyframes butterflyFly{
+    0%,100%{transform:translate(0,0) rotate(-5deg)}
+    25%{transform:translate(20px,-30px) rotate(8deg)}
+    50%{transform:translate(40px,-10px) rotate(-3deg)}
+    75%{transform:translate(15px,-25px) rotate(5deg)}
+  }
+</style>
+</head>
+<body>
+
+<div class="stage" id="stage">
+
+  <!-- Background -->
+  <div class="sky-stars" id="stars"></div>
+  <div class="moon"></div>
+  <div class="mountains">
+    <svg viewBox="0 0 540 360" preserveAspectRatio="none">
+      <path d="M0,360 L0,260 L80,220 L160,250 L230,200 L300,240 L380,190 L450,230 L540,200 L540,360 Z" fill="#0a1238" opacity=".85"/>
+      <path d="M0,360 L0,290 L70,260 L140,280 L210,255 L290,285 L360,260 L440,280 L540,255 L540,360 Z" fill="#070c2a" opacity=".95"/>
+    </svg>
+  </div>
+  <svg class="forest-l" viewBox="0 0 200 240" preserveAspectRatio="xMinYMax meet">
+    <g fill="#050818">
+      <polygon points="40,240 20,140 60,140"/>
+      <polygon points="40,240 25,100 55,100"/>
+      <polygon points="80,240 60,160 100,160"/>
+      <polygon points="80,240 65,120 95,120"/>
+      <polygon points="120,240 100,170 140,170"/>
+      <polygon points="160,240 140,180 180,180"/>
+    </g>
+  </svg>
+  <svg class="forest-r" viewBox="0 0 200 240" preserveAspectRatio="xMinYMax meet">
+    <g fill="#050818">
+      <polygon points="40,240 20,140 60,140"/>
+      <polygon points="40,240 25,100 55,100"/>
+      <polygon points="80,240 60,160 100,160"/>
+      <polygon points="80,240 65,120 95,120"/>
+      <polygon points="120,240 100,170 140,170"/>
+    </g>
+  </svg>
+  <svg class="crystal" viewBox="0 0 100 140">
+    <g>
+      <polygon points="30,140 20,60 40,30 60,55 50,140" fill="rgba(200,220,255,.45)" stroke="rgba(220,230,255,.85)" stroke-width="1"/>
+      <polygon points="55,140 50,80 65,55 80,90 75,140" fill="rgba(200,220,255,.35)" stroke="rgba(220,230,255,.7)" stroke-width="1"/>
+      <polygon points="40,30 50,12 60,55" fill="rgba(255,255,255,.5)"/>
+    </g>
+  </svg>
+
+  <div class="particles" id="particles"></div>
+
+  <!-- Navigation -->
+  <div class="nav">
+    <button id="btnBack" aria-label="back">
+      <svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>
+    </button>
+    <button id="btnHome" aria-label="home">
+      <svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>
+    </button>
+  </div>
+
+  <!-- Audio toggle -->
+  <button class="audio-toggle" id="btnAudio" aria-label="bgm">
+    <svg id="iconSoundOn" viewBox="0 0 24 24"><path d="M3 10v4h4l5 4V6L7 10H3z"/><path d="M16 8c1.5 1.2 1.5 6.8 0 8" stroke-linecap="round"/></svg>
+    <svg id="iconSoundOff" viewBox="0 0 24 24" style="display:none"><path d="M3 10v4h4l5 4V6L7 10H3z"/><line x1="16" y1="9" x2="22" y2="15"/><line x1="22" y1="9" x2="16" y2="15"/></svg>
+  </button>
+
+  <!-- ===== Screen 1: Intro ===== -->
+  <div class="screen active" id="screen-intro">
+    <div class="ring"></div>
+    <h1 class="title-1">난다의<br>한 장 행운</h1>
+    <div class="butterfly">
+      <svg viewBox="0 0 200 150" width="100%" height="100%">
+        <defs>
+          <radialGradient id="wing" cx="50%" cy="50%">
+            <stop offset="0%" stop-color="#e0d3ff" stop-opacity=".95"/>
+            <stop offset="60%" stop-color="#9d8fe6" stop-opacity=".75"/>
+            <stop offset="100%" stop-color="#5a4ba8" stop-opacity=".4"/>
+          </radialGradient>
+        </defs>
+        <g transform="translate(100,75)">
+          <path d="M0,0 C-50,-50 -90,-30 -85,5 C-80,35 -45,40 0,15 Z" fill="url(#wing)" stroke="#c8b9ff" stroke-width=".8"/>
+          <path d="M0,0 C50,-50 90,-30 85,5 C80,35 45,40 0,15 Z" fill="url(#wing)" stroke="#c8b9ff" stroke-width=".8"/>
+          <path d="M0,2 C-35,30 -55,55 -40,65 C-25,68 -10,40 0,18 Z" fill="url(#wing)" stroke="#c8b9ff" stroke-width=".8" opacity=".85"/>
+          <path d="M0,2 C35,30 55,55 40,65 C25,68 10,40 0,18 Z" fill="url(#wing)" stroke="#c8b9ff" stroke-width=".8" opacity=".85"/>
+          <ellipse cx="0" cy="10" rx="3" ry="22" fill="#2a1f55"/>
+          <circle cx="-30" cy="-15" r="2.5" fill="#fff" opacity=".95"/>
+          <circle cx="30" cy="-15" r="2.5" fill="#fff" opacity=".95"/>
+          <circle cx="-55" cy="0" r="1.5" fill="#fff" opacity=".85"/>
+          <circle cx="55" cy="0" r="1.5" fill="#fff" opacity=".85"/>
+        </g>
+      </svg>
+    </div>
+    <div class="subtitle">
+      <span class="tarot">TAROT</span>
+      <span class="nanda">Nanda</span>
+    </div>
+    <div class="intro-sub">오늘의 흐름을 한 장에 담아 보세요</div>
+    <button class="btn-primary" id="btnStart">카드 선택하기 <span class="arrow">›</span></button>
+  </div>
+
+  <!-- ===== Screen 2: Card Pick ===== -->
+  <div class="screen" id="screen-pick">
+    <div class="pick-head">
+      <span class="ornament">✦</span>
+      <h2>카드를 선택하세요</h2>
+      <div class="sub">마음이 가는 카드를 한 장 골라 주세요</div>
+      <span class="divider"></span>
+    </div>
+    <div class="deck" id="deck"></div>
+    <div class="picked-slot empty" id="pickedSlot">
+      <div class="picked-glow"></div>
+      <div class="flipper" id="flipper">
+        <div class="face back"></div>
+        <div class="face front" id="cardFront">
+          <span class="corn tl"></span><span class="corn tr"></span>
+          <span class="corn bl"></span><span class="corn br"></span>
+          <div class="num" id="cardNum">—</div>
+          <div id="cardArt"></div>
+          <div>
+            <div class="nm" id="cardName">—</div>
+            <div class="nm-en" id="cardNameEn">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="btn-reveal" id="btnReveal">결과 확인하기</button>
+
+    <div class="float-butterfly">
+      <svg viewBox="0 0 200 150" width="100%" height="100%">
+        <g transform="translate(100,75)">
+          <path d="M0,0 C-50,-50 -90,-30 -85,5 C-80,35 -45,40 0,15 Z" fill="rgba(200,180,255,.65)"/>
+          <path d="M0,0 C50,-50 90,-30 85,5 C80,35 45,40 0,15 Z" fill="rgba(200,180,255,.65)"/>
+          <path d="M0,2 C-35,30 -55,55 -40,65 C-25,68 -10,40 0,18 Z" fill="rgba(200,180,255,.5)"/>
+          <path d="M0,2 C35,30 55,55 40,65 C25,68 10,40 0,18 Z" fill="rgba(200,180,255,.5)"/>
+          <ellipse cx="0" cy="10" rx="2.5" ry="20" fill="#2a1f55"/>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <!-- ===== Screen 3: Result ===== -->
+  <div class="screen" id="screen-result">
+    <div class="result-card">
+      <div class="r-num" id="rNum">0</div>
+      <div class="r-name" id="rName"></div>
+      <div class="r-name-en" id="rNameEn"></div>
+      <div class="r-illust" id="rIllust"></div>
+      <div class="r-divider"><span>✦</span></div>
+      <div class="r-keyword" id="rKeyword"></div>
+      <div class="r-headline" id="rHeadline"></div>
+
+      <div class="r-section"><h4>오늘의 핵심 운</h4><p id="rCore"></p></div>
+      <div class="r-section"><h4>연애운</h4><p id="rLove"></p></div>
+      <div class="r-section"><h4>금전운</h4><p id="rMoney"></p></div>
+      <div class="r-section"><h4>일 · 사업운</h4><p id="rWork"></p></div>
+      <div class="r-section"><h4>조심할 점</h4><p id="rCaution"></p></div>
+    </div>
+
+    <div class="cta-wrap">
+      <div class="cta-line">
+        더 깊은 흐름은 <strong>난다사주</strong>에서 확인하세요.<br>
+        오늘 뽑은 카드 한 장 너머의 큰 흐름을 풀어 드립니다.
+      </div>
+      <a class="btn-cta" href="https://www.nandasaju.co.kr/" target="_blank" rel="noopener">내 사주 기반으로 자세히 보기 ›</a>
+      <a class="btn-cta muted" href="https://www.nandasaju.co.kr/" target="_blank" rel="noopener">난다사주 상담 바로가기</a>
+      <button class="btn-redraw" id="btnAgain">다시 한 장 뽑기</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- === Card SVG symbols (reused by both card front and result illust) === -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="art-traveler" viewBox="0 0 64 64"><g fill="none" stroke="#7a4a14" stroke-width="1.5" stroke-linecap="round"><circle cx="32" cy="20" r="6"/><path d="M32 26v14M24 30l8 4 8-4M28 56l4-16 4 16M20 22l-4-4M44 22l4-4"/></g></symbol>
+    <symbol id="art-wand" viewBox="0 0 64 64"><g fill="none" stroke="#7a4a14" stroke-width="1.5"><path d="M16 48L48 16"/><circle cx="48" cy="16" r="4" fill="#b9924c"/><circle cx="16" cy="48" r="3" fill="#b9924c"/><path d="M20 12v6M12 18h6M52 50v-6M58 44h-6" stroke-width="1.2"/></g></symbol>
+    <symbol id="art-priestess" viewBox="0 0 64 64"><g fill="none" stroke="#7a4a14" stroke-width="1.5"><path d="M14 14v40M50 14v40"/><path d="M14 14h36M14 54h36"/><circle cx="32" cy="32" r="6"/><path d="M26 32a6 6 0 0 0 12 0" fill="#b9924c" opacity=".5"/></g></symbol>
+    <symbol id="art-empress" viewBox="0 0 64 64"><g fill="none" stroke="#7a4a14" stroke-width="1.5"><circle cx="32" cy="22" r="8"/><path d="M24 30c-2 8-4 22 8 22s10-14 8-22"/><path d="M20 16l4 4M40 20l4-4M16 38c-2-2-4-2-6 0M48 38c2-2 4-2 6 0"/></g></symbol>
+    <symbol id="art-emperor" viewBox="0 0 64 64"><g fill="none" stroke="#7a4a14" stroke-width="1.5"><path d="M16 16l4-6 6 4 6-6 6 6 6-4 4 6v8H16z" fill="#b9924c" opacity=".4"/><path d="M16 24v34h32V24M22 30v22M42 30v22"/></g></symbol>
+    <symbol id="art-temple" viewBox="0 0 64 64"><g fill="none" stroke="#7a4a14" stroke-width="1.5"><path d="M10 22h44L32 8z"/><path d="M14 22v32M50 22v32M22 22v32M42 22v32M32 22v32"/><path d="M8 54h48"/></g></symbol>
+    <symbol id="art-lovers" viewBox="0 0 64 64"><g fill="none" stroke="#7a4a14" stroke-width="1.5"><path d="M32 52C18 42 12 32 18 24c4-5 10-4 14 1 4-5 10-6 14-1 6 8 0 18-14 28z" fill="#b9924c" opacity=".4"/></g></symbol>
+    <symbol id="art-chariot" viewBox="0 0 64 64"><g fill="none" stroke="#7a4a14" stroke-width="1.5"><rect x="14" y="22" width="36" height="20" rx="2"/><circle cx="22" cy="48" r="6"/><circle cx="42" cy="48" r="6"/><path d="M22 22l4-10h12l4 10"/></g></symbol>
+    <symbol id="art-strength" viewBox="0 0 64 64"><g fill="none" stroke="#7a4a14" stroke-width="1.5"><circle cx="32" cy="34" r="14"/><circle cx="26" cy="32" r="2" fill="#7a4a14"/><circle cx="38" cy="32" r="2" fill="#7a4a14"/><path d="M22 38c4 4 16 4 20 0M32 12c0 4-4 6-4 6s4 2 4 6 4-2 4-6-4-2-4-6z" fill="#b9924c" opacity=".4"/></g></symbol>
+    <symbol id="art-lantern" viewBox="0 0 64 64"><g fill="none" stroke="#7a4a14" stroke-width="1.5"><rect x="24" y="22" width="16" height="22" rx="2"/><circle cx="32" cy="33" r="4" fill="#fff7c8"/><path d="M32 12v8M28 18h8"/><path d="M22 22l-6 4M42 22l6 4"/></g></symbol>
+    <symbol id="art-wheel" viewBox="0 0 64 64"><g fill="none" stroke="#7a4a14" stroke-width="1.5"><circle cx="32" cy="32" r="18"/><circle cx="32" cy="32" r="6"/><path d="M32 14v36M14 32h36M19 19l26 26M45 19L19 45"/></g></symbol>
+    <symbol id="art-scales" viewBox="0 0 64 64"><g fill="none" stroke="#7a4a14" stroke-width="1.5"><path d="M32 14v36M16 50h32"/><path d="M16 22l-6 12h12zM48 22l-6 12h12z"/><path d="M16 22h32"/></g></symbol>
+    <symbol id="art-hanged" viewBox="0 0 64 64"><g fill="none" stroke="#7a4a14" stroke-width="1.5"><path d="M14 10h36M32 10v12"/><circle cx="32" cy="28" r="6"/><path d="M32 34v10M26 44l-2 8M38 44l2 8M28 50l4-4 4 4"/></g></symbol>
+    <symbol id="art-scythe" viewBox="0 0 64 64"><g fill="none" stroke="#7a4a14" stroke-width="1.5"><path d="M50 12L18 52"/><path d="M50 12c-12 0-22 8-22 18" stroke-width="2"/><circle cx="20" cy="50" r="3" fill="#b9924c"/></g></symbol>
+    <symbol id="art-vessel" viewBox="0 0 64 64"><g fill="none" stroke="#7a4a14" stroke-width="1.5"><path d="M18 16l4 12c-4 6 0 16 10 16s14-10 10-16l4-12"/><path d="M16 16h32M28 40h8" opacity=".6"/></g></symbol>
+    <symbol id="art-chain" viewBox="0 0 64 64"><g fill="none" stroke="#7a4a14" stroke-width="1.5"><ellipse cx="22" cy="32" rx="6" ry="10"/><ellipse cx="42" cy="32" rx="6" ry="10"/><path d="M28 32h8M16 16l4 4M48 16l-4 4M16 48l4-4M48 48l-4-4"/></g></symbol>
+    <symbol id="art-tower" viewBox="0 0 64 64"><g fill="none" stroke="#7a4a14" stroke-width="1.5"><rect x="22" y="16" width="20" height="36"/><path d="M22 16h20l-4-6h-12z"/><path d="M22 28h20M22 40h20"/><path d="M14 10l8 8M50 10l-8 8" stroke-width="1.2"/></g></symbol>
+    <symbol id="art-star" viewBox="0 0 64 64"><g fill="none" stroke="#7a4a14" stroke-width="1.5"><path d="M32 10l5 14h14l-12 8 5 14-12-9-12 9 5-14-12-8h14z" fill="#b9924c" opacity=".4"/></g></symbol>
+    <symbol id="art-moon" viewBox="0 0 64 64"><g fill="none" stroke="#7a4a14" stroke-width="1.5"><path d="M44 14a18 18 0 1 0 6 28 14 14 0 0 1-6-28z" fill="#b9924c" opacity=".4"/></g></symbol>
+    <symbol id="art-sun" viewBox="0 0 64 64"><g fill="none" stroke="#7a4a14" stroke-width="1.5"><circle cx="32" cy="32" r="10" fill="#b9924c" opacity=".5"/><path d="M32 10v8M32 46v8M10 32h8M46 32h8M16 16l6 6M48 48l-6-6M16 48l6-6M48 16l-6 6"/></g></symbol>
+    <symbol id="art-trumpet" viewBox="0 0 64 64"><g fill="none" stroke="#7a4a14" stroke-width="1.5"><path d="M14 30l28-12v28L14 34z" fill="#b9924c" opacity=".4"/><circle cx="48" cy="32" r="4"/></g></symbol>
+    <symbol id="art-wreath" viewBox="0 0 64 64"><g fill="none" stroke="#7a4a14" stroke-width="1.5"><ellipse cx="32" cy="32" rx="20" ry="22"/><path d="M14 32c0-6 4-12 18-12s18 6 18 12" opacity=".6"/><circle cx="14" cy="32" r="2" fill="#b9924c"/><circle cx="50" cy="32" r="2" fill="#b9924c"/></g></symbol>
+    <symbol id="art-wands" viewBox="0 0 64 64"><g fill="none" stroke="#7a4a14" stroke-width="1.5"><path d="M16 50L48 14M24 50L40 14M32 50L32 14"/><path d="M18 18l4 4M48 14l4 4" opacity=".7"/></g></symbol>
+    <symbol id="art-cups" viewBox="0 0 64 64"><g fill="none" stroke="#7a4a14" stroke-width="1.5"><path d="M18 18h28l-4 16c0 6-4 10-10 10s-10-4-10-10z" fill="#b9924c" opacity=".3"/><path d="M28 46v6h8v-6M22 50h20"/></g></symbol>
+    <symbol id="art-swords" viewBox="0 0 64 64"><g fill="none" stroke="#7a4a14" stroke-width="1.5"><path d="M32 10v36M22 38h20"/><path d="M28 46h8v6h-8z" fill="#b9924c" opacity=".4"/></g></symbol>
+    <symbol id="art-pentacles" viewBox="0 0 64 64"><g fill="none" stroke="#7a4a14" stroke-width="1.5"><circle cx="32" cy="32" r="18" fill="#b9924c" opacity=".3"/><path d="M32 16l4 12h12l-10 8 4 12-10-8-10 8 4-12-10-8h12z"/></g></symbol>
+  </defs>
+</svg>
+
+<script src="cards.js"></script>
+<script>
+/* ============ Stars ============ */
+(function(){
+  const wrap = document.getElementById('stars');
+  for(let i=0;i<80;i++){
+    const s = document.createElement('div');
+    s.className = 'star' + (Math.random()>.85?' big':'');
+    const sz = Math.random()*2 + 1;
+    s.style.width = sz+'px';
+    s.style.height = sz+'px';
+    s.style.left = Math.random()*100+'%';
+    s.style.top = Math.random()*65+'%';
+    s.style.animationDelay = (Math.random()*4)+'s';
+    s.style.animationDuration = (3+Math.random()*4)+'s';
+    wrap.appendChild(s);
+  }
+})();
+
+/* ============ State ============ */
+const drawnHistory = new Set();
+let currentCard = null;
+let isRevealing = false;
+
+/* ============ Screen control ============ */
+const screens = {
+  intro: document.getElementById('screen-intro'),
+  pick: document.getElementById('screen-pick'),
+  result: document.getElementById('screen-result'),
+};
+let history = ['intro'];
+
+function show(id){
+  Object.values(screens).forEach(s=>s.classList.remove('active'));
+  screens[id].classList.add('active');
+  if(history[history.length-1] !== id) history.push(id);
+  if(id==='result') burstParticles();
+}
+function back(){
+  if(history.length<=1){
+    location.href='https://www.nandasaju.co.kr/';
+    return;
+  }
+  history.pop();
+  const prev = history[history.length-1];
+  Object.values(screens).forEach(s=>s.classList.remove('active'));
+  screens[prev].classList.add('active');
+}
+
+document.getElementById('btnHome').addEventListener('click',()=>{
+  location.href='https://www.nandasaju.co.kr/';
+});
+document.getElementById('btnBack').addEventListener('click',back);
+
+document.getElementById('btnStart').addEventListener('click',()=>{
+  bgmStart();
+  buildDeck();
+  show('pick');
+});
+
+/* ============ Build deck (shuffle animation) ============ */
+function buildDeck(){
+  const deck = document.getElementById('deck');
+  deck.innerHTML='';
+  resetPickedSlot();
+  isRevealing = false;
+  for(let i=0;i<9;i++){
+    const c = document.createElement('div');
+    c.className='deck-card';
+    c.style.setProperty('--shuffle-y','-40px');
+    c.style.setProperty('--shuffle-r',(Math.random()*30-15)+'deg');
+    c.style.opacity='0';
+    c.addEventListener('click',()=>pickCard(c));
+    deck.appendChild(c);
+    setTimeout(()=>{
+      c.style.opacity='1';
+      c.style.setProperty('--shuffle-y','0px');
+      c.style.setProperty('--shuffle-r','0deg');
+    }, 80 + i*70);
+  }
+}
+
+function resetPickedSlot(){
+  const slot = document.getElementById('pickedSlot');
+  const flipper = document.getElementById('flipper');
+  slot.classList.add('empty');
+  slot.classList.remove('has-pick');
+  flipper.classList.remove('flipped');
+  document.getElementById('btnReveal').classList.remove('ready');
+  currentCard = null;
+}
+
+/* ============ Pick & flip ============ */
+function pickCard(el){
+  if(isRevealing || el.classList.contains('picked')) return;
+  isRevealing = true;
+
+  // pick a random not-yet-drawn card
+  const pool = CARDS.filter(c=>!drawnHistory.has(c.id));
+  const source = pool.length ? pool : CARDS;
+  const card = source[Math.floor(Math.random()*source.length)];
+  drawnHistory.add(card.id);
+  currentCard = card;
+
+  // visuals: disable others, hide picked one
+  document.querySelectorAll('.deck-card').forEach(d=>{
+    if(d!==el) d.classList.add('disabled');
+  });
+  el.classList.add('picked');
+
+  // fill card front
+  document.getElementById('cardNum').textContent = card.num;
+  document.getElementById('cardName').textContent = card.name.replace(/\s*\(역\)\s*/,'');
+  document.getElementById('cardNameEn').textContent = card.nameEn;
+  document.getElementById('cardArt').innerHTML = '<svg><use href="#art-'+(card.art||'star')+'"/></svg>';
+
+  // move slot in, then flip
+  const slot = document.getElementById('pickedSlot');
+  slot.classList.remove('empty');
+  slot.classList.add('has-pick');
+
+  setTimeout(()=>{
+    document.getElementById('flipper').classList.add('flipped');
+    chime();
+  }, 320);
+
+  setTimeout(()=>{
+    document.getElementById('btnReveal').classList.add('ready');
+    isRevealing = false;
+  }, 1200);
+}
+
+document.getElementById('btnReveal').addEventListener('click',()=>{
+  if(!currentCard) return;
+  renderResult(currentCard);
+  show('result');
+});
+
+/* ============ Result render ============ */
+function renderResult(card){
+  document.getElementById('rNum').textContent = card.num;
+  document.getElementById('rName').textContent = card.name;
+  document.getElementById('rNameEn').textContent = card.nameEn;
+  document.getElementById('rIllust').innerHTML = '<svg><use href="#art-'+(card.art||'star')+'"/></svg>';
+  document.getElementById('rKeyword').textContent = card.keyword;
+  document.getElementById('rHeadline').innerHTML = card.headline;
+  document.getElementById('rCore').textContent = card.core;
+  document.getElementById('rLove').textContent = card.love;
+  document.getElementById('rMoney').textContent = card.money;
+  document.getElementById('rWork').textContent = card.work;
+  document.getElementById('rCaution').textContent = card.caution;
+}
+
+document.getElementById('btnAgain').addEventListener('click',()=>{
+  history = ['intro'];
+  buildDeck();
+  show('pick');
+});
+
+/* ============ Particles burst (result reveal) ============ */
+function burstParticles(){
+  const wrap = document.getElementById('particles');
+  for(let i=0;i<24;i++){
+    const d = document.createElement('div');
+    d.className = 'p-dot';
+    const x = 30 + Math.random()*40;
+    const y = 30 + Math.random()*30;
+    d.style.left = x+'%';
+    d.style.top = y+'%';
+    const dx = (Math.random()-0.5)*240;
+    const dy = -(Math.random()*180+40);
+    const dur = 1400 + Math.random()*800;
+    d.style.transition = 'transform '+dur+'ms cubic-bezier(.2,.7,.3,1), opacity '+dur+'ms ease-out';
+    wrap.appendChild(d);
+    requestAnimationFrame(()=>{
+      d.style.opacity = .9;
+      d.style.transform = 'translate('+dx+'px,'+dy+'px) scale(1.4)';
+    });
+    setTimeout(()=>{ d.style.opacity = 0; }, dur*.7);
+    setTimeout(()=>{ d.remove(); }, dur+200);
+  }
+}
+
+/* ============ BGM (Web Audio ambient pad, quiet & calm) ============ */
+let audioCtx=null, bgmGain=null, bgmOn=false, bgmStarted=false;
+const iconOn = document.getElementById('iconSoundOn');
+const iconOff = document.getElementById('iconSoundOff');
+const TARGET_BGM = 0.18; // lower default volume
+
+function bgmStart(){
+  if(bgmStarted) return;
+  bgmStarted=true;
+  try{
+    audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+    bgmGain = audioCtx.createGain();
+    bgmGain.gain.value = 0.0;
+    // master lowpass for warmth
+    const lp = audioCtx.createBiquadFilter();
+    lp.type='lowpass'; lp.frequency.value=2200; lp.Q.value=.7;
+    bgmGain.connect(lp).connect(audioCtx.destination);
+
+    // mystic pad: stacked detuned sine/triangle in minor pentatonic
+    const baseFreqs = [110, 146.83, 196, 220, 293.66]; // A2, D3, G3, A3, D4
+    baseFreqs.forEach((f,i)=>{
+      const osc = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      osc.type = i%2===0 ? 'sine' : 'triangle';
+      osc.frequency.value = f;
+      g.gain.value = 0.045;
+      const lfo = audioCtx.createOscillator();
+      const lfoG = audioCtx.createGain();
+      lfo.frequency.value = 0.05 + i*0.025;
+      lfoG.gain.value = 0.02;
+      lfo.connect(lfoG).connect(g.gain);
+      osc.connect(g).connect(bgmGain);
+      osc.start();
+      lfo.start();
+    });
+
+    // occasional gentle bell
+    function sparkle(){
+      if(!audioCtx) return;
+      const notes = [880, 988, 1175, 1318];
+      const f = notes[Math.floor(Math.random()*notes.length)];
+      const osc = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      osc.type='sine';
+      osc.frequency.value=f;
+      g.gain.setValueAtTime(0, audioCtx.currentTime);
+      g.gain.linearRampToValueAtTime(0.025, audioCtx.currentTime+0.08);
+      g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime+2.6);
+      osc.connect(g).connect(bgmGain);
+      osc.start();
+      osc.stop(audioCtx.currentTime+2.8);
+      setTimeout(sparkle, 5500 + Math.random()*6000);
+    }
+    setTimeout(sparkle, 3000);
+
+    bgmToggle(true);
+  }catch(e){}
+}
+
+function bgmToggle(on){
+  if(!bgmGain) return;
+  bgmOn = on;
+  const now = audioCtx.currentTime;
+  bgmGain.gain.cancelScheduledValues(now);
+  bgmGain.gain.linearRampToValueAtTime(on?TARGET_BGM:0.0, now+1.4);
+  iconOn.style.display = on?'block':'none';
+  iconOff.style.display = on?'none':'block';
+}
+
+document.getElementById('btnAudio').addEventListener('click',()=>{
+  if(!bgmStarted){ bgmStart(); return; }
+  bgmToggle(!bgmOn);
+});
+
+function chime(){
+  if(!audioCtx) return;
+  const notes=[660, 880, 1175];
+  notes.forEach((f,i)=>{
+    const osc=audioCtx.createOscillator();
+    const g=audioCtx.createGain();
+    osc.type='sine';osc.frequency.value=f;
+    const t=audioCtx.currentTime + i*0.07;
+    g.gain.setValueAtTime(0,t);
+    g.gain.linearRampToValueAtTime(0.08,t+0.04);
+    g.gain.exponentialRampToValueAtTime(0.0001,t+1.2);
+    osc.connect(g).connect(bgmGain||audioCtx.destination);
+    osc.start(t);osc.stop(t+1.3);
+  });
+}
+</script>
+</body>
+</html>
